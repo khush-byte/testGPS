@@ -71,7 +71,6 @@ class LocationService: Service() {
 //            }
 //            .launchIn(serviceScope)
         val mainHandler = Handler(Looper.getMainLooper())
-
         mainHandler.post(object : Runnable {
             override fun run() {
                 val lat = newlocation?.latitude.toString().take(7)
@@ -80,7 +79,7 @@ class LocationService: Service() {
                     "Location: ($lat, $long)"
                 )
                 notificationManager.notify(1, updateNotification.build())
-                mainHandler.postDelayed(this, 10000)
+                mainHandler.postDelayed(this, 300000L)
             }
         })
 
@@ -92,15 +91,15 @@ class LocationService: Service() {
         locationManager = applicationContext.getSystemService(LOCATION_SERVICE) as LocationManager
         locationManager.requestLocationUpdates(
             LocationManager.GPS_PROVIDER,
-            10000L,
-            0f,
+            300000L,
+            10f,
             locationListener
         )
     }
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
-            val loc = "${location.latitude},\n${location.longitude}"
-            Log.d("myTag", loc)
+//            val loc = "${location.latitude},\n${location.longitude}"
+//            Log.d("myTag", loc)
             newlocation = location
         }
 
