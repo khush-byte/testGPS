@@ -1,4 +1,4 @@
-package com.example.testgps
+package com.example.testgps.main
 
 import android.location.Location
 import kotlinx.coroutines.flow.Flow

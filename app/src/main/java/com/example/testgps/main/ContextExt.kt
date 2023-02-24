@@ -1,4 +1,4 @@
-package com.example.testgps
+package com.example.testgps.main
 
 import android.content.Context
 import android.content.pm.PackageManager
