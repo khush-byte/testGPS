@@ -1,13 +1,17 @@
 package com.example.testgps.main
 
-import android.app.PendingIntent
+import android.app.ActivityManager
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
+import android.os.Handler
+import android.os.Looper
 import android.widget.RemoteViews
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.testgps.R
+
 
 /**
  * Implementation of App Widget functionality.
@@ -42,10 +46,10 @@ internal fun updateAppWidget(
     val sharedPreference = context.getSharedPreferences("LocalMemory", Context.MODE_PRIVATE)
     val views = RemoteViews(context.packageName, R.layout.test_g_p_s)
 
-    if(sharedPreference.getInt("state", 0)!=0) {
+    if (sharedPreference.getInt("state", 0) != 0) {
         widgetText = context.getString(R.string.appwidget_text_on)
         views.setTextColor(R.id.appwidget_text, Color.WHITE)
-    }else{
+    } else {
         widgetText = context.getString(R.string.appwidget_text_off)
         views.setTextColor(R.id.appwidget_text, Color.RED)
     }
@@ -62,4 +66,39 @@ internal fun updateAppWidget(
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
+    checkServiceStatus(context)
+}
+
+fun checkServiceStatus(context: Context) {
+    val serviceState = isMyServiceRunning(LocationService::class.java, context)
+    val sharedPreference = context.getSharedPreferences("LocalMemory", Context.MODE_PRIVATE)
+
+    val mainHandler = Handler(Looper.getMainLooper())
+    mainHandler.post(object : Runnable {
+        override fun run() {
+            //Log.d("myTag", "${serviceState}, ${sharedPreference.getInt("state", 0)}")
+            if (!serviceState && sharedPreference.getInt("state", 0) == 1) {
+                val editor = sharedPreference.edit()
+                editor.putInt("serviceDropped", 1)
+                editor.apply()
+                Toast.makeText(
+                    context,
+                    "System error! Please activate the tracking service!",
+                    Toast.LENGTH_LONG
+                ).show()
+                //Log.d("myTag", "${sharedPreference.getInt("serviceDropped", 0)}")
+            }
+            mainHandler.postDelayed(this, 1500000)
+        }
+    })
+}
+
+private fun isMyServiceRunning(serviceClass: Class<*>, context: Context): Boolean {
+    val manager = context.getSystemService(AppCompatActivity.ACTIVITY_SERVICE) as ActivityManager
+    for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+        if (serviceClass.name == service.service.className) {
+            return true
+        }
+    }
+    return false
 }

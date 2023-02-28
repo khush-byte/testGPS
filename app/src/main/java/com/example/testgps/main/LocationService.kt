@@ -64,6 +64,7 @@ class LocationService : Service() {
         startTracking()
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
         mainHandler = Handler(Looper.getMainLooper())
         mainHandler.post(object : Runnable {
             override fun run() {
@@ -76,7 +77,7 @@ class LocationService : Service() {
                 )
                 insertNewLocation(newLocation)
                 notificationManager.notify(1, updateNotification.build())
-                mainHandler.postDelayed(this, 10000)//600000
+                mainHandler.postDelayed(this, 600000)
             }
         })
 
@@ -89,7 +90,7 @@ class LocationService : Service() {
         locationManager = applicationContext.getSystemService(LOCATION_SERVICE) as LocationManager
         locationManager.requestLocationUpdates(
             LocationManager.GPS_PROVIDER,
-            10000,///250000
+            250000,
             0f,
             locationListener
         )
@@ -134,8 +135,7 @@ class LocationService : Service() {
         if (status) {
             widgetText = context.getString(R.string.appwidget_text_on)
             remoteViews.setTextColor(R.id.appwidget_text, Color.WHITE)
-        }
-        else {
+        } else {
             widgetText = context.getString(R.string.appwidget_text_off)
             remoteViews.setTextColor(R.id.appwidget_text, Color.RED)
         }

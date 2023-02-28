@@ -1,18 +1,26 @@
 package com.example.testgps.main
 
+import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.appwidget.AppWidgetManager
 import android.content.*
 import android.graphics.Color
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.testgps.R
 import com.example.testgps.database.BookDao
 import com.example.testgps.databinding.ActivityMainBinding
+import com.google.android.material.internal.ViewUtils.hideKeyboard
+import java.math.BigInteger
+import java.security.MessageDigest
 
 lateinit var bookDao: BookDao
 
@@ -33,15 +41,28 @@ class MainActivity : AppCompatActivity() {
             0
         )
         setContentView(binding.root)
+        binding.pinBoard.visibility = View.GONE
         sharedPreference = getSharedPreferences("LocalMemory", Context.MODE_PRIVATE)
         initAppSate()
+
+        val serviceState = isMyServiceRunning(LocationService::class.java)
+        if(!serviceState){
+            val editor = sharedPreference.edit()
+            editor.putInt("state", 0)
+            editor.apply()
+            initAppSate()
+
+//            if(sharedPreference.getInt("serviceDropped", 0)==1){
+//                runService()
+//            }
+        }
 
         binding.btnStart.setOnClickListener {
             runService()
         }
 
         binding.btnStop.setOnClickListener {
-            stopService()
+            pinCheck()
         }
     }
 
@@ -60,6 +81,7 @@ class MainActivity : AppCompatActivity() {
         editor.putInt("state", 1)
         editor.apply()
         initAppSate()
+        runWidget()
     }
 
     private fun stopService(){
@@ -116,6 +138,52 @@ class MainActivity : AppCompatActivity() {
         alert.show()
     }
 
+    @SuppressLint("RestrictedApi")
+    private fun pinCheck(){
+        binding.pinBoard.visibility = View.VISIBLE
+
+        binding.btnPinCancel.setOnClickListener {
+            binding.pinBoard.visibility = View.GONE
+        }
+
+        binding.btnPinOk.setOnClickListener {
+            if(binding.pinEnterField.text.isNotEmpty()){
+                Log.d("myTag", "${md5(binding.pinEnterField.text.toString())}, $PIN")
+                if(md5(binding.pinEnterField.text.toString()) == PIN){
+                    stopService()
+                    binding.pinEnterField.text.clear()
+                    hideKeyboard(currentFocus ?: View(this))
+                    binding.pinBoard.visibility = View.GONE
+                }else{
+                    Toast.makeText(this@MainActivity, "Incorrect PIN code!", Toast.LENGTH_SHORT).show()
+                    binding.pinEnterField.text.clear()
+                }
+            }else{
+                Toast.makeText(this@MainActivity, "Enter PIN code please!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun md5(input:String): String {
+        val md = MessageDigest.getInstance("MD5")
+        return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
+    }
+
+    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun runWidget(){
+        val context: Context = this
+        checkServiceStatus(context)
+    }
+
 //    private fun testDB() {
 //        lifecycleScope.launch(Dispatchers.IO) {
 //            //Insert
@@ -160,6 +228,6 @@ class MainActivity : AppCompatActivity() {
 //    }
 
     companion object {
-        const val PIN = "4762989107706"
+        const val PIN = "68a175c210685859e1f05743f4dff9c5"
     }
 }

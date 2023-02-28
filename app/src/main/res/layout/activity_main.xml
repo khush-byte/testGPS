@@ -6,6 +6,83 @@
     android:layout_height="match_parent"
     tools:context=".main.MainActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pin_board"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@color/material_dynamic_neutral20"
+        android:translationZ="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/electrolize"
+            android:text="ENTER PIN CODE"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/pin_enter_field"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/pin_enter_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="54dp"
+            android:layout_marginEnd="54dp"
+            android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+            android:ems="10"
+            android:fontFamily="@font/electrolize"
+            android:gravity="center"
+            android:inputType="numberPassword"
+            android:textColor="#353939"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <Button
+            android:id="@+id/btn_pin_ok"
+            android:layout_width="110dp"
+            android:layout_height="54dp"
+            android:fontFamily="@font/electrolize"
+            android:text="OK"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_pin_cancel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@+id/pin_enter_field"
+            app:layout_constraintTop_toBottomOf="@+id/pin_enter_field" />
+
+        <Button
+            android:id="@+id/btn_pin_cancel"
+            android:layout_width="110dp"
+            android:layout_height="54dp"
+            android:fontFamily="@font/electrolize"
+            android:text="CANCEL"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/pin_enter_field"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btn_pin_ok"
+            app:layout_constraintTop_toBottomOf="@+id/pin_enter_field" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -60,4 +137,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_start" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
