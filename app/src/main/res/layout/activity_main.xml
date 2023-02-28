@@ -11,25 +11,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:text="4PM Project Location Tracker"
-        android:textSize="18sp"
-        android:textStyle="bold"
+        android:fontFamily="@font/electrolize"
+        android:gravity="center"
+        android:text="Caritas 4PM Project\nLocation Tracker"
+        android:textSize="24sp"
+        android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/main_status_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/electrolize"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.5" />
+
     <Button
         android:id="@+id/btn_start"
         android:layout_width="160dp"
         android:layout_height="80dp"
+        android:fontFamily="@font/electrolize"
         android:text="START"
         app:layout_constraintBottom_toTopOf="@+id/btn_stop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6"
+        app:layout_constraintVertical_bias="0.7"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
@@ -37,6 +53,7 @@
         android:layout_width="160dp"
         android:layout_height="80dp"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/electrolize"
         android:text="STOP"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

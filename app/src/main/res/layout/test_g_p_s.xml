@@ -32,7 +32,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/appwidget_text_off"
             android:gravity="center_vertical"
-            android:text="@string/appwidget_text_off"
+            android:text="SYSTEM ERROR"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="normal" />

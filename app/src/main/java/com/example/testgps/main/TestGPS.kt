@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.widget.RemoteViews
 import com.example.testgps.R
 
@@ -37,18 +38,27 @@ internal fun updateAppWidget(
     appWidgetManager: AppWidgetManager,
     appWidgetId: Int
 ) {
-    val widgetText = context.getString(R.string.appwidget_text_on)
-    // Construct the RemoteViews object
+    var widgetText = "SYSTEM ERROR"
+    val sharedPreference = context.getSharedPreferences("LocalMemory", Context.MODE_PRIVATE)
     val views = RemoteViews(context.packageName, R.layout.test_g_p_s)
+
+    if(sharedPreference.getInt("state", 0)!=0) {
+        widgetText = context.getString(R.string.appwidget_text_on)
+        views.setTextColor(R.id.appwidget_text, Color.WHITE)
+    }else{
+        widgetText = context.getString(R.string.appwidget_text_off)
+        views.setTextColor(R.id.appwidget_text, Color.RED)
+    }
+
     views.setTextViewText(R.id.appwidget_text, widgetText)
 
-    val intent = Intent(context, MainActivity::class.java)
-    val pendingIntent = PendingIntent.getActivity(
-        context,
-        0,
-        intent,
-        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT);
-    views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent)
+//    val intent = Intent(context, MainActivity::class.java)
+//    val pendingIntent = PendingIntent.getActivity(
+//        context,
+//        0,
+//        intent,
+//        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT);
+//    views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent)
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)

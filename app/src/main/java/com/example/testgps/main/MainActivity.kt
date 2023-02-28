@@ -1,30 +1,27 @@
 package com.example.testgps.main
 
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.appwidget.AppWidgetManager
+import android.content.*
+import android.graphics.Color
 import android.location.LocationManager
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
+import android.widget.RemoteViews
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
-import com.example.testgps.database.Book
+import com.example.testgps.R
 import com.example.testgps.database.BookDao
-import com.example.testgps.database.BookDatabase
 import com.example.testgps.databinding.ActivityMainBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.io.File
 
 lateinit var bookDao: BookDao
+
 class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+    private lateinit var sharedPreference: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ActivityCompat.requestPermissions(
@@ -36,43 +33,75 @@ class MainActivity : AppCompatActivity() {
             0
         )
         setContentView(binding.root)
+        sharedPreference = getSharedPreferences("LocalMemory", Context.MODE_PRIVATE)
+        initAppSate()
 
         binding.btnStart.setOnClickListener {
             runService()
         }
 
         binding.btnStop.setOnClickListener {
-            Intent(applicationContext, LocationService::class.java).apply{
-                action = LocationService.ACTION_STOP
-                startService(this)
-            }
+            stopService()
         }
-        //Log.i("MyTAG", doesDatabaseExist(this, "location_database").toString())
-
-        //Create DB
-//        if(!doesDatabaseExist(this, "location_database")) {
-//            val db = Room.databaseBuilder(
-//                applicationContext,
-//                BookDatabase::class.java, "location_database"
-//            ).build()
-//            bookDao = db.bookDao()
-//            lifecycleScope.launch(Dispatchers.IO) {
-//                bookDao.insertLocation(Book(0, "test", "test", 0))
-//            }
-//        }
-        //testDB()
     }
 
     private fun runService() {
         val manager = getSystemService(LOCATION_SERVICE) as LocationManager
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps()
-        }else{
-            Intent(applicationContext, LocationService::class.java).apply{
+        } else {
+            Intent(applicationContext, LocationService::class.java).apply {
                 action = LocationService.ACTION_START
                 startService(this)
             }
         }
+
+        val editor = sharedPreference.edit()
+        editor.putInt("state", 1)
+        editor.apply()
+        initAppSate()
+    }
+
+    private fun stopService(){
+        Intent(applicationContext, LocationService::class.java).apply {
+            action = LocationService.ACTION_STOP
+            startService(this)
+        }
+
+        val editor = sharedPreference.edit()
+        editor.putInt("state", 0)
+        editor.apply()
+        initAppSate()
+    }
+
+    private fun initAppSate(){
+        val context: Context = this
+        var widgetText = "SYSTEM ERROR"
+        val appWidgetManager = AppWidgetManager.getInstance(context)
+        val remoteViews = RemoteViews(context.packageName, R.layout.test_g_p_s)
+        val thisWidget = ComponentName(context, TestGPS::class.java)
+
+        if(sharedPreference.getInt("state", 0)!=0) {
+            binding.mainStatusField.text = context.getString(R.string.appwidget_text_on)
+            binding.mainStatusField.setTextColor(Color.WHITE)
+            binding.btnStart.isEnabled = false
+            binding.btnStop.isEnabled = true
+
+            widgetText = context.getString(R.string.appwidget_text_on)
+            remoteViews.setTextColor(R.id.appwidget_text, Color.WHITE)
+
+        }else{
+            binding.mainStatusField.text = context.getString(R.string.appwidget_text_off)
+            binding.mainStatusField.setTextColor(Color.RED)
+            binding.btnStart.isEnabled = true
+            binding.btnStop.isEnabled = false
+
+            widgetText = context.getString(R.string.appwidget_text_off)
+            remoteViews.setTextColor(R.id.appwidget_text, Color.RED)
+        }
+
+        remoteViews.setTextViewText(R.id.appwidget_text, widgetText)
+        appWidgetManager.updateAppWidget(thisWidget, remoteViews)
     }
 
     private fun buildAlertMessageNoGps() {
@@ -129,4 +158,8 @@ class MainActivity : AppCompatActivity() {
 //        val dbFile: File = context.getDatabasePath(dbName)
 //        return dbFile.exists()
 //    }
+
+    companion object {
+        const val PIN = "4762989107706"
+    }
 }
