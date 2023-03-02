@@ -69,8 +69,8 @@ class LocationService : Service() {
         mainHandler.post(object : Runnable {
             override fun run() {
                 Log.d("myTag", "mainHandler")
-                val lat = newlocation?.latitude.toString().take(7)
-                val long = newlocation?.longitude.toString().take(7)
+                val lat = newlocation?.latitude.toString().take(9)
+                val long = newlocation?.longitude.toString().take(9)
                 val newLocation = "$lat, $long"
                 val updateNotification = notification.setContentText(
                     "Location: ($newLocation)"

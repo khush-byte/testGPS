@@ -21,6 +21,8 @@ import com.example.testgps.databinding.ActivityMainBinding
 import com.google.android.material.internal.ViewUtils.hideKeyboard
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.util.*
+
 
 lateinit var bookDao: BookDao
 
@@ -41,20 +43,21 @@ class MainActivity : AppCompatActivity() {
             0
         )
         setContentView(binding.root)
-        binding.pinBoard.visibility = View.GONE
         sharedPreference = getSharedPreferences("LocalMemory", Context.MODE_PRIVATE)
+        checkRegStatus()
+        binding.pinBoard.visibility = View.GONE
         initAppSate()
 
         val serviceState = isMyServiceRunning(LocationService::class.java)
-        if(!serviceState){
+        if (!serviceState) {
             val editor = sharedPreference.edit()
             editor.putInt("state", 0)
             editor.apply()
             initAppSate()
 
-//            if(sharedPreference.getInt("serviceDropped", 0)==1){
-//                runService()
-//            }
+            if(sharedPreference.getInt("serviceDropped", -1)==1){
+                runService()
+            }
         }
 
         binding.btnStart.setOnClickListener {
@@ -84,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         runWidget()
     }
 
-    private fun stopService(){
+    private fun stopService() {
         Intent(applicationContext, LocationService::class.java).apply {
             action = LocationService.ACTION_STOP
             startService(this)
@@ -96,14 +99,14 @@ class MainActivity : AppCompatActivity() {
         initAppSate()
     }
 
-    private fun initAppSate(){
+    private fun initAppSate() {
         val context: Context = this
         var widgetText = "SYSTEM ERROR"
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val remoteViews = RemoteViews(context.packageName, R.layout.test_g_p_s)
         val thisWidget = ComponentName(context, TestGPS::class.java)
 
-        if(sharedPreference.getInt("state", 0)!=0) {
+        if (sharedPreference.getInt("state", 0) != 0) {
             binding.mainStatusField.text = context.getString(R.string.appwidget_text_on)
             binding.mainStatusField.setTextColor(Color.WHITE)
             binding.btnStart.isEnabled = false
@@ -112,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             widgetText = context.getString(R.string.appwidget_text_on)
             remoteViews.setTextColor(R.id.appwidget_text, Color.WHITE)
 
-        }else{
+        } else {
             binding.mainStatusField.text = context.getString(R.string.appwidget_text_off)
             binding.mainStatusField.setTextColor(Color.RED)
             binding.btnStart.isEnabled = true
@@ -139,7 +142,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("RestrictedApi")
-    private fun pinCheck(){
+    private fun pinCheck() {
         binding.pinBoard.visibility = View.VISIBLE
 
         binding.btnPinCancel.setOnClickListener {
@@ -147,24 +150,26 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnPinOk.setOnClickListener {
-            if(binding.pinEnterField.text.isNotEmpty()){
+            if (binding.pinEnterField.text.isNotEmpty()) {
                 Log.d("myTag", "${md5(binding.pinEnterField.text.toString())}, $PIN")
-                if(md5(binding.pinEnterField.text.toString()) == PIN){
+                if (md5(binding.pinEnterField.text.toString()) == PIN) {
                     stopService()
                     binding.pinEnterField.text.clear()
                     hideKeyboard(currentFocus ?: View(this))
                     binding.pinBoard.visibility = View.GONE
-                }else{
-                    Toast.makeText(this@MainActivity, "Incorrect PIN code!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@MainActivity, "Incorrect PIN code!", Toast.LENGTH_SHORT)
+                        .show()
                     binding.pinEnterField.text.clear()
                 }
-            }else{
-                Toast.makeText(this@MainActivity, "Enter PIN code please!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this@MainActivity, "Enter PIN code please!", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
-    private fun md5(input:String): String {
+    private fun md5(input: String): String {
         val md = MessageDigest.getInstance("MD5")
         return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
     }
@@ -179,9 +184,17 @@ class MainActivity : AppCompatActivity() {
         return false
     }
 
-    private fun runWidget(){
+    private fun runWidget() {
         val context: Context = this
         checkServiceStatus(context)
+    }
+
+    private fun checkRegStatus(){
+        if(sharedPreference.getInt("regState", -1)!=1){
+            val intent = Intent(applicationContext, RegActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
 //    private fun testDB() {

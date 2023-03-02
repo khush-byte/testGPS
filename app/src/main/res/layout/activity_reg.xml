@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/material_dynamic_neutral20"
+    tools:context=".main.RegActivity">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/electrolize"
+        android:text="USER REGISTRATION"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/user_qr"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="bottom"
+            android:textColorHint="#5D6565"
+            app:hintTextColor="#9EA1A1"
+            app:layout_constraintBottom_toTopOf="@+id/user_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:passwordToggleEnabled="false">
+
+            <EditText
+                android:id="@+id/user_qr_field"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                android:drawableStart="@drawable/ic_baseline_gps_fixed"
+                android:drawableLeft="@drawable/ic_baseline_gps_fixed"
+                android:drawablePadding="10dp"
+                android:hint="@string/qr_hint"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:maxLength="5"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingEnd="0dp"
+                android:paddingRight="0dp"
+                android:textColor="#454444"
+                android:textColorLink="#454444"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="bottom"
+            android:textColorHint="#5D6565"
+            app:hintTextColor="#9EA1A1"
+            app:layout_constraintBottom_toTopOf="@+id/user_phone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_qr"
+            app:passwordToggleEnabled="false">
+
+            <EditText
+                android:id="@+id/user_name_field"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                android:drawableStart="@drawable/ic_baseline_gps_fixed"
+                android:drawableLeft="@drawable/ic_baseline_gps_fixed"
+                android:drawablePadding="10dp"
+                android:hint="@string/username_hint"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingEnd="0dp"
+                android:paddingRight="0dp"
+                android:textColor="#454444"
+                android:textColorLink="#454444"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/user_phone"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="bottom"
+            android:textColorHint="#5D6565"
+            app:hintTextColor="#9EA1A1"
+            app:layout_constraintBottom_toTopOf="@+id/user_gender"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_name"
+            app:passwordToggleEnabled="false">
+
+            <EditText
+                android:id="@+id/user_phone_field"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                android:drawableStart="@drawable/ic_baseline_gps_fixed"
+                android:drawableLeft="@drawable/ic_baseline_gps_fixed"
+                android:drawablePadding="10dp"
+                android:hint="@string/phone_hint"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:maxLength="9"
+                android:paddingEnd="0dp"
+                android:paddingRight="0dp"
+                android:textColor="#454444"
+                android:textColorLink="#454444"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/user_gender"
+            style="@style/Widget.AppCompat.Spinner.DropDown"
+            android:layout_width="fill_parent"
+            android:layout_height="36dp"
+            android:layout_marginTop="12dp"
+            android:gravity="right|center_vertical"
+            android:paddingRight="8dp"
+            android:prompt="@string/gender_hint"
+            android:spinnerMode="dropdown"
+            app:layout_constraintBottom_toTopOf="@+id/user_region"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_phone"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/user_region"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="bottom"
+            android:textColorHint="#5D6565"
+            app:hintTextColor="#9EA1A1"
+            app:layout_constraintBottom_toTopOf="@+id/user_district"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_gender"
+            app:passwordToggleEnabled="false">
+
+            <EditText
+                android:id="@+id/user_region_field"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                android:drawableStart="@drawable/ic_baseline_gps_fixed"
+                android:drawableLeft="@drawable/ic_baseline_gps_fixed"
+                android:drawablePadding="10dp"
+                android:hint="@string/region_hint"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingEnd="0dp"
+                android:paddingRight="0dp"
+                android:textColor="#393A3A"
+                android:textColorLink="#454444"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/user_district"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="bottom"
+            android:textColorHint="#5D6565"
+            app:hintTextColor="#9EA1A1"
+            app:layout_constraintBottom_toTopOf="@+id/user_jamoat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_region"
+            app:passwordToggleEnabled="false">
+
+            <EditText
+                android:id="@+id/user_district_field"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                android:drawableStart="@drawable/ic_baseline_gps_fixed"
+                android:drawableLeft="@drawable/ic_baseline_gps_fixed"
+                android:drawablePadding="10dp"
+                android:hint="@string/district_hint"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingEnd="0dp"
+                android:paddingRight="0dp"
+                android:textColor="#454444"
+                android:textColorLink="#454444"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/user_jamoat"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="bottom"
+            android:textColorHint="#5D6565"
+            app:hintTextColor="#9EA1A1"
+            app:layout_constraintBottom_toTopOf="@+id/user_village"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_district"
+            app:passwordToggleEnabled="false">
+
+            <EditText
+                android:id="@+id/user_jamoat_field"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                android:drawableStart="@drawable/ic_baseline_gps_fixed"
+                android:drawableLeft="@drawable/ic_baseline_gps_fixed"
+                android:drawablePadding="10dp"
+                android:hint="@string/jamoat_hint"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingEnd="0dp"
+                android:paddingRight="0dp"
+                android:textColor="#454444"
+                android:textColorLink="#454444"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/user_village"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:gravity="bottom"
+            android:textColorHint="#5D6565"
+            app:hintTextColor="#9EA1A1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_jamoat"
+            app:passwordToggleEnabled="false">
+
+            <EditText
+                android:id="@+id/user_village_field"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+                android:drawableStart="@drawable/ic_baseline_gps_fixed"
+                android:drawableLeft="@drawable/ic_baseline_gps_fixed"
+                android:drawablePadding="10dp"
+                android:hint="@string/village_hint"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingEnd="0dp"
+                android:paddingRight="0dp"
+                android:textColor="#454444"
+                android:textColorLink="#454444"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/btn_reg"
+        android:layout_width="126dp"
+        android:layout_height="54dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/electrolize"
+        android:text="SUBMIT"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

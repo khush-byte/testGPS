@@ -4,4 +4,12 @@
     <string name="appwidget_text_off">system is off...</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
+    <string name="qr_hint"><font size="40">Enter QR Code</font></string>
+    <string name="username_hint"><font size="40">Enter Full Name</font></string>
+    <string name="gender_hint"><font size="40">Enter Gender</font></string>
+    <string name="region_hint"><font size="40">Enter Region</font></string>
+    <string name="district_hint"><font size="40">Enter District</font></string>
+    <string name="jamoat_hint"><font size="40">Enter Jamoat</font></string>
+    <string name="village_hint"><font size="40">Enter Village</font></string>
+    <string name="phone_hint"><font size="40">Enter Phone Number</font></string>
 </resources>
