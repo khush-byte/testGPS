@@ -13,6 +13,9 @@ interface BookDao {
     @Query("SELECT * FROM location_table WHERE state = 1")
     fun getNewLocations(): List<Book>
 
+    @Query("SELECT * FROM location_table WHERE state = 1 LIMIT 1")
+    fun getLocation(): Book
+
     @Update
     suspend fun updateBook(book: Book)
 

@@ -5,5 +5,5 @@ data class RequestModel(
     val datetime: String,
     val latitude: String,
     val longitude: String,
-    val userId: String
+    val phoneId: String
 )

@@ -20,20 +20,28 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.room.Room
 import com.example.testgps.R
+import com.example.testgps.connection.*
 import com.example.testgps.database.Book
+import com.example.testgps.database.BookDao
 import com.example.testgps.database.BookDatabase
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.math.BigInteger
+import java.security.MessageDigest
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class LocationService : Service() {
+class LocationService: Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var locationClient: LocationClient
     private lateinit var locationManager: LocationManager
     private var newlocation: Location? = null
     var checkLoc: String = ""
     private lateinit var mainHandler: Handler
+    private lateinit var phoneNumber: String
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -45,6 +53,9 @@ class LocationService : Service() {
             applicationContext,
             LocationServices.getFusedLocationProviderClient(applicationContext)
         )
+
+        val sharedPreference = getSharedPreferences("LocalMemory", Context.MODE_PRIVATE)
+        phoneNumber = sharedPreference.getString("phone", "").toString()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -83,6 +94,7 @@ class LocationService : Service() {
 
         startForeground(1, notification.build())
         setStatus(true)
+        submitData()
     }
 
     @SuppressLint("MissingPermission")
@@ -158,6 +170,65 @@ class LocationService : Service() {
                 checkLoc = location
             }
         }
+    }
+
+    private fun submitData(){
+        serviceScope.launch(Dispatchers.IO) {
+            val db = Room.databaseBuilder(
+                applicationContext,
+                BookDatabase::class.java, "location_database"
+            ).build()
+            bookDao = db.bookDao()
+            sendLocationToServer(bookDao)
+//            Log.i("MyTAG", "*****   ${books.size} books there *****")
+//            for (book in books) {
+//                Log.i("MyTAG", "id: ${book.id} name: ${book.location} author: ${book.datetime} state: ${book.state}")
+//            }
+        }
+    }
+
+    private fun sendLocationToServer(bookDao: BookDao){
+        val books = bookDao.getNewLocations()
+        if(books.isNotEmpty()) {
+            val book = bookDao.getLocation()
+            val loc = book.location.replace(" ", "").split(",")
+            sendNewLocation(loc[0], loc[1], book.datetime)
+        }
+    }
+
+    private fun sendNewLocation(lat: String, long: String, date: String){
+        val context: Context = this
+        val response = ServiceBuilder.buildService(ApiInterface::class.java)
+        val phone = "$phoneNumber "
+        val requestModel = RequestModel(
+            md5("$phone${date}bCctS9eqoYaZl21a"),
+            date,
+            lat,
+            long,
+            phone)
+        Log.i("myTAG", "$requestModel ")
+
+        if(CheckConnection.isOnline(context)) {
+            response.sendReq(requestModel).enqueue(
+                object : Callback<ResponseModel> {
+                    override fun onResponse(
+                        call: Call<ResponseModel>,
+                        response: Response<ResponseModel>
+                    ) {
+                        Log.d("myTag", response.body().toString())
+                    }
+
+                    override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
+                        Log.d("myTag", t.toString())
+                    }
+                }
+            )
+        }
+    }
+
+    private fun md5(input:String): String {
+        val md = MessageDigest.getInstance("MD5")
+        return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
     }
 
     companion object {
