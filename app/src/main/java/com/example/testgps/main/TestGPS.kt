@@ -7,6 +7,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -66,7 +67,7 @@ internal fun updateAppWidget(
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
-    checkServiceStatus(context)
+    //checkServiceStatus(context)
 }
 
 fun checkServiceStatus(context: Context) {
@@ -76,7 +77,7 @@ fun checkServiceStatus(context: Context) {
     val mainHandler = Handler(Looper.getMainLooper())
     mainHandler.post(object : Runnable {
         override fun run() {
-            //Log.d("myTag", "${serviceState}, ${sharedPreference.getInt("state", 0)}")
+            Log.d("myTag", "${serviceState}, ${sharedPreference.getInt("state", 0)}")
             if (!serviceState && sharedPreference.getInt("state", 0) == 1) {
                 val editor = sharedPreference.edit()
                 editor.putInt("serviceDropped", 1)

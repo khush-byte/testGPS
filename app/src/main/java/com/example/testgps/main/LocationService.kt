@@ -34,7 +34,7 @@ import java.security.MessageDigest
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class LocationService: Service() {
+class LocationService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var locationClient: LocationClient
     private lateinit var locationManager: LocationManager
@@ -88,13 +88,13 @@ class LocationService: Service() {
                 )
                 insertNewLocation(newLocation)
                 notificationManager.notify(1, updateNotification.build())
-                mainHandler.postDelayed(this, 600000)
+                submitData()
+                mainHandler.postDelayed(this, 300000)
             }
         })
 
         startForeground(1, notification.build())
         setStatus(true)
-        submitData()
     }
 
     @SuppressLint("MissingPermission")
@@ -102,7 +102,7 @@ class LocationService: Service() {
         locationManager = applicationContext.getSystemService(LOCATION_SERVICE) as LocationManager
         locationManager.requestLocationUpdates(
             LocationManager.GPS_PROVIDER,
-            250000,
+            5000,
             0f,
             locationListener
         )
@@ -110,9 +110,17 @@ class LocationService: Service() {
 
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
-            val loc = "${location.latitude},\n${location.longitude}"
-            Log.d("myTag", loc)
-            newlocation = location
+            if (newlocation != null) {
+                Log.d("myTag", calculateDistance(newlocation!!, location).toString())
+                val distance = calculateDistance(newlocation!!, location)
+                if (distance < 20.0 && distance > 1.0) {
+                    newlocation = location
+                    val loc = "${location.latitude},\n${location.longitude}"
+                    Log.d("myTag", loc)
+                }
+            } else {
+                newlocation = location
+            }
         }
 
         @Deprecated("Deprecated in Java")
@@ -172,7 +180,7 @@ class LocationService: Service() {
         }
     }
 
-    private fun submitData(){
+    private fun submitData() {
         serviceScope.launch(Dispatchers.IO) {
             val db = Room.databaseBuilder(
                 applicationContext,
@@ -187,35 +195,40 @@ class LocationService: Service() {
         }
     }
 
-    private fun sendLocationToServer(bookDao: BookDao){
+    private fun sendLocationToServer(bookDao: BookDao) {
         val books = bookDao.getNewLocations()
-        if(books.isNotEmpty()) {
+        if (books.isNotEmpty()) {
             val book = bookDao.getLocation()
             val loc = book.location.replace(" ", "").split(",")
-            sendNewLocation(loc[0], loc[1], book.datetime)
+            sendNewLocation(loc[0], loc[1], book, bookDao)
         }
     }
 
-    private fun sendNewLocation(lat: String, long: String, date: String){
+    private fun sendNewLocation(lat: String, long: String, book: Book, bookDao: BookDao) {
         val context: Context = this
         val response = ServiceBuilder.buildService(ApiInterface::class.java)
         val phone = "$phoneNumber "
         val requestModel = RequestModel(
-            md5("$phone${date}bCctS9eqoYaZl21a"),
-            date,
+            md5("$phone${book.datetime}bCctS9eqoYaZl21a"),
+            book.datetime,
             lat,
             long,
-            phone)
+            phone
+        )
         Log.i("myTAG", "$requestModel ")
 
-        if(CheckConnection.isOnline(context)) {
+        if (CheckConnection.isOnline(context)) {
             response.sendReq(requestModel).enqueue(
                 object : Callback<ResponseModel> {
                     override fun onResponse(
                         call: Call<ResponseModel>,
                         response: Response<ResponseModel>
                     ) {
-                        Log.d("myTag", response.body().toString())
+                        Log.d("myTag", response.body()?.result.toString())
+                        if (response.body()?.result == "0") {
+                            Log.d("myTag", book.toString())
+                            updateData(book, bookDao)
+                        }
                     }
 
                     override fun onFailure(call: Call<ResponseModel>, t: Throwable) {
@@ -226,9 +239,22 @@ class LocationService: Service() {
         }
     }
 
-    private fun md5(input:String): String {
+    private fun updateData(book: Book, bookDao: BookDao) {
+        serviceScope.launch(Dispatchers.IO) {
+            book.state = 0
+            Log.d("myTag", book.toString())
+            bookDao.updateBook(book)
+            sendLocationToServer(bookDao)
+        }
+    }
+
+    private fun md5(input: String): String {
         val md = MessageDigest.getInstance("MD5")
         return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
+    }
+
+    private fun calculateDistance(oldLocation: Location, newLocation: Location): Float {
+        return oldLocation.distanceTo(newLocation);
     }
 
     companion object {

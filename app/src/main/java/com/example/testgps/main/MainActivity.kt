@@ -23,7 +23,6 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import java.util.*
 
-
 lateinit var bookDao: BookDao
 
 class MainActivity : AppCompatActivity() {
@@ -55,9 +54,9 @@ class MainActivity : AppCompatActivity() {
             editor.apply()
             initAppSate()
 
-            if(sharedPreference.getInt("serviceDropped", -1)==1){
-                runService()
-            }
+//            if(sharedPreference.getInt("serviceDropped", -1)==1){
+//                runService()
+//            }
         }
 
         binding.btnStart.setOnClickListener {
@@ -78,13 +77,13 @@ class MainActivity : AppCompatActivity() {
                 action = LocationService.ACTION_START
                 startService(this)
             }
-        }
 
-        val editor = sharedPreference.edit()
-        editor.putInt("state", 1)
-        editor.apply()
-        initAppSate()
-        runWidget()
+            val editor = sharedPreference.edit()
+            editor.putInt("state", 1)
+            editor.apply()
+            initAppSate()
+            //runWidget()
+        }
     }
 
     private fun stopService() {
